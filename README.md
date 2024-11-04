@@ -1,13 +1,34 @@
-<<<<<<< HEAD
-# React + Vite
+# React Firebase Book Store
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the **React Firebase Book Store**! This application allows users to browse, order, and manage books using React for the front end and Firebase for the back end.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-=======
-# BookStore
-React Firebase
->>>>>>> e6d0bcc32eb2b71f9afa9993e0b0eb9b928c82b3
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Firebase Configuration](#firebase-configuration)
+- [Folder Structure](#folder-structure)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- **User Authentication:** Sign up and log in using Firebase Authentication.
+- **Browse Books:** View a list of available books with details.
+- **Order Books:** Place orders for books and view order history.
+- **User Profiles:** Manage user profiles and view ordered books.
+- **Responsive Design:** Mobile-friendly layout using React Bootstrap.
+
+## Technologies Used
+
+- **Frontend:**
+  - React
+  - React Router
+  - React Bootstrap
+  - Axios (for API calls)
+
+- **Backend:**
+  - Firebase Firestore (for database)
+  - Firebase Authentication (for user management)
