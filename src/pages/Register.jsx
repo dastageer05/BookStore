@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-
+import { toast } from "react-toastify";
 import { useFirebase } from "../context/Firebase";
 
 const RegisterPage = () => {
@@ -21,15 +21,21 @@ const RegisterPage = () => {
   }, [firebase, navigate]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const result = await firebase.signupUserWithEmailAndPassword(
-      email,
-      password
-    );
+    try {
+      e.preventDefault();
+      await firebase.signupUserWithEmailAndPassword(
+        email,
+        password
+      );
+      navigate("/user");
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message);
+    }
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 text-white">
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>

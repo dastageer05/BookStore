@@ -15,6 +15,7 @@ import {
   addDoc,
   getDocs,
   getDoc,
+  deleteDoc,
   setDoc,
   doc,
   query,
@@ -58,6 +59,9 @@ export const FirebaseProvider = (props) => {
 
   const singinUserWithEmailAndPass = (email, password) =>
     signInWithEmailAndPassword(firebaseAuth, email, password);
+  
+  const signout = (email, password) =>
+    firebaseAuth.signOut();
 
   const signinWithGoogle = () => signInWithPopup(firebaseAuth, googleProvider);
 
@@ -103,12 +107,15 @@ export const FirebaseProvider = (props) => {
       qty: Number(qty),
     });
     
+    const segments = result._key?.path?.segments[3];
+    console.log(segments);
     //User collection
     const userBooksRef = doc(firestore, "UserBooks", user.uid );
-    const userBookDocRef = doc(userBooksRef, "orders",  bookId);
+    const userBookDocRef = doc(userBooksRef, "orders",  segments);
     console.log("User Book Document Reference:", userBookDocRef.path);
 
     await setDoc(userBookDocRef, {
+      bookId,
      bookName,
      bookPrice,
      author,
@@ -118,6 +125,23 @@ export const FirebaseProvider = (props) => {
     return result;
   };
 
+  const deletePlaceOrder = async (orderId, bookId) => {
+   try {
+     const orderRef = doc(firestore, "books", bookId, "orders", orderId);
+     await deleteDoc(orderRef);
+ 
+     //User collection
+     const userOrderRef = doc(firestore, "UserBooks", user.uid, "orders", orderId);
+     await deleteDoc(userOrderRef);
+     console.log(`Order ${orderId} deleted from UserBooks/${user.uid}/orders.`);
+ 
+     await deleteDoc(userOrderRef)
+   } catch (error) {
+      console.log("deletion error", error)
+   }
+
+  };
+
   const getUserOrders = async (userId) => {
     const ordersRef = collection(firestore, "UserBooks", userId, "orders");
     const ordersQuery = query(ordersRef);
@@ -125,14 +149,20 @@ export const FirebaseProvider = (props) => {
     return ordersSnapshot;
 };
 
-  // const fetchMyBooks = async (userId) => {
-  //   const collectionRef = collection(firestore, "books");
-  //   const q = query(collectionRef, where("userID", "==", userId));
-
-  //   const result = await getDocs(q);
-  //   return result;
-  // };
   const fetchMyBooks = async (userId) => {
+    const collectionRef = collection(firestore, "books");
+    const q = query(collectionRef, where("userID", "==", userId));
+    const result = await getDocs(q);
+
+    const books = [];
+    for (const doc of result.docs){
+      books.push({id: doc.id, ...doc.data()});
+    }
+    return books;
+  };
+
+  //working
+  const fetchMyBookswithOrders = async (userId) => {
     const collectionRef = collection(firestore, "books");
     const q = query(collectionRef, where("userID", "==", userId));
     const result = await getDocs(q);
@@ -163,14 +193,17 @@ export const FirebaseProvider = (props) => {
         signinWithGoogle,
         signupUserWithEmailAndPassword,
         singinUserWithEmailAndPass,
+        signout,
         handleCreateNewListing,
         listAllBooks,
         getImageURL,
         getBookById,
         placeOrder,
         fetchMyBooks,
+        fetchMyBookswithOrders,
         getOrders,
         getUserOrders,
+        deletePlaceOrder,
         isLoggedIn,
         user,
       }}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 
 import { useFirebase } from "../context/Firebase";
 
@@ -21,11 +22,17 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await firebase.singinUserWithEmailAndPass(email, password);
+    try {
+    await firebase.singinUserWithEmailAndPass(email, password);
+    navigate("/user")
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message);
+    }
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 text-white">
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
@@ -51,9 +58,13 @@ const LoginPage = () => {
           Login
         </Button>
       </Form>
-      <h1 className="mt-5 mb-5">OR</h1>
-      <Button onClick={firebase.signinWithGoogle} variant="danger">
+
+      <Button onClick={firebase.signinWithGoogle} variant="danger" className="mt-2">
         Signin with Google
+      </Button>
+      <h1 className="mt-2 mb-2">OR</h1>
+      <Button onClick={() => {navigate("/register")}} variant="primary">
+        Sign Up
       </Button>
     </div>
   );

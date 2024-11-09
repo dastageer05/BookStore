@@ -1,25 +1,37 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-
+import { useNavigate } from "react-router-dom";
 import { useFirebase } from "../context/Firebase";
+import { toast } from "react-toastify";
 
 const ListingPage = () => {
   const firebase = useFirebase();
-
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [isbnNumber, setIsbnNumber] = useState("");
   const [price, setPrice] = useState("");
   const [coverPic, setCoverPic] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    await firebase.handleCreateNewListing(name, isbnNumber, price, coverPic);
+    try {
+      e.preventDefault();
+      await firebase.handleCreateNewListing(name, isbnNumber, price, coverPic);
+      toast.success("Book Add successfully! ")
+      navigate("/user");
+    } catch (error) {
+      toast.error("fail to add book")
+    }
   };
 
+  if (!firebase.isLoggedIn) return (<>
+  <h1 className="container mt-5 text-white">Please log in</h1>
+  <Button className="ms-5" onClick={() => {navigate("/login")}}>Login page</Button>
+  </>)
+  
   return (
     <div className="container mt-5">
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} style={{ color: "white", backgroundColor: "rgba(0, 0, 0, 0.349)", padding: "10px"}}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Enter Book Name</Form.Label>
           <Form.Control

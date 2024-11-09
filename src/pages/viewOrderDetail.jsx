@@ -12,7 +12,7 @@ const ViewOrderDetails = () => {
   }, []);
 
   return (
-    <div className="container mt-3">
+    <div className="container mt-3 text-white">
       <h1>Orders</h1>
       {orders.map((order) => {
         const data = order.data();

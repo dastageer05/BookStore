@@ -1,0 +1,11 @@
+
+.card {
+    background-color: rgba(0, 0, 0, 0.349) !important;
+    color: white !important;
+    border-radius: 12px !important;
+}
+
+.btn-primary {
+    --bs-btn-bg: rgba(0, 0, 0, 0.521) !important;
+    --bs-btn-border-color: black !important;
+}
